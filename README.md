@@ -1,0 +1,4 @@
+#Requesitos:
+
+* SQLite
+* Json Parser
