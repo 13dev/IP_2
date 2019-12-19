@@ -1,5 +1,5 @@
 import sqlite3
-from src.Helpers import row
+from src.Helpers import row_factory
 
 """
 Esta classe foi criada para ajudar a centralizar a conexeção e gereciamento de dados. 
@@ -15,7 +15,14 @@ class DB:
     @param filename - nome do ficheiro onde base de dados se encontra.
     """
     def open(self, filename):
+        # Abrir conexão com a base de dados
         self.db = sqlite3.connect(filename)
+
+        """
+        Definir o campo row_factory, para que os campos venham nomeados na base de dados.
+        função row() importada do Helpers.py, dar uma vista de olhos.
+        """
+        self.db.row_factory = row_factory
 
     """
     Obter todos os registos da base de dados
@@ -32,7 +39,6 @@ class DB:
         if isinstance(fields, list):
             fields = ', '.join(fields)
 
-        self.db.row_factory = row
 
         cursor = self.db.cursor()
         cursor.execute("SELECT %s FROM `%s`" % (fields, table))

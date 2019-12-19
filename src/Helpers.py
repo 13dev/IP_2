@@ -35,7 +35,7 @@ Exemplo:
 
 irá mapear para uma namedtuple, que é basicamente um tuplo com indices nomeados
 """
-def row(cursor, row):
+def row_factory(cursor, row):
     """Retorna linhas sqlite como tuplas nomeadas."""
     fields = [col[0] for col in cursor.description]
     Row = namedtuple("Row", fields)
