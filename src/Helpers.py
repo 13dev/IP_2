@@ -29,6 +29,11 @@ class obj(object):
 
 """
 Esta classe é uma ajuda para mapear os dados da base de dados.
+Exemplo:
+
+(1, 'Preço certo') -> (id=1, name='Preço certo')
+
+irá mapear para uma namedtuple, que é basicamente um tuplo com indices nomeados
 """
 def row(cursor, row):
     """Retorna linhas sqlite como tuplas nomeadas."""
