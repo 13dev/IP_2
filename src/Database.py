@@ -1,5 +1,5 @@
 import sqlite3
-
+from src.Helpers import row
 
 """
 Esta classe foi criada para ajudar a centralizar a conexeção e gereciamento de dados. 
@@ -31,6 +31,8 @@ class DB:
 
         if isinstance(fields, list):
             fields = ', '.join(fields)
+
+        self.db.row_factory = row
 
         cursor = self.db.cursor()
         cursor.execute("SELECT %s FROM `%s`" % (fields, table))
