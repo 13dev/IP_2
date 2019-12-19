@@ -32,8 +32,8 @@ class DB:
     def fetch_all(self, table, fields="*"):
 
         """
-            Verificar se 'fields é um array, se sim, junta todos os elementos ex:
-            ['name', 'email'] -> 'name, email'
+        Verificar se 'fields é um array, se sim, junta todos os elementos ex:
+        ['name', 'email'] -> 'name, email'
         """
 
         if isinstance(fields, list):
