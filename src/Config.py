@@ -6,7 +6,8 @@ CONFIG = {
         'FILENAME': 'database.sqlite3',
         'USER': '',
         'PASSWORD': '',
-    }
+    },
+    'NAME': 'RTP-MADEIRA \N{COPYRIGHT SIGN}'
 }
 
 # Passar dicionario como keyworded argumento

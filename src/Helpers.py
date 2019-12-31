@@ -1,5 +1,5 @@
 from collections import namedtuple
-
+import os
 
 """
 Esta classe converte dicionario para objecto
@@ -40,3 +40,12 @@ def row_factory(cursor, row):
     fields = [col[0] for col in cursor.description]
     Row = namedtuple("Row", fields)
     return Row(*row)
+
+
+"""
+Esta função é usada para limpar a consola, em ambos os sistemas operativos
+Windows
+Linux
+"""
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
