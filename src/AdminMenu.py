@@ -1,11 +1,14 @@
 import json
+import os
+import sys
+
 
 from src.Helpers import cls
 from src.Menu.Menu import Menu
 from src.Menu.MenuOption import MenuOption
 
 
-class VoteMenu:
+class AdminMenu:
     menu = None
 
     def __init__(self, db):
@@ -35,20 +38,16 @@ class VoteMenu:
         return "%s: %s (%sh-%sh)" % (item.getid(), item.getname(), schedule_start, schedule_end)
 
     def show(self, data):
-        self.menu = Menu("RTP \N{COPYRIGHT SIGN} - Madeira", subtitle="Os Melhores programas televisivos")
+        os.execl(sys.executable, sys.executable, *sys.argv)
 
-        for program in data:
-            metadata = {
-                "schedule": program.schedule,
-                "votes": program.votes
-            }
+        # self.menu = Menu("RTP \N{COPYRIGHT SIGN} - Madeira", subtitle="Modo Administrador.")
 
-            self.menu.setmenu_close(callback=self.menu_close_handler, choice=0)
-            self.menu.setformat_menu_option(self.format_menu_option)
-
-            # Adicionar item ao menu
-            self.menu.add_item(
-                MenuOption(id=program.id, name=program.name, metadata=metadata, callback=self.vote_option_menu_handler)
-            )
-
-        self.menu.show()
+        # self.menu.setmenu_close(callback=self.menu_close_handler, choice=0)
+        # self.menu.setformat_menu_option(self.format_menu_option)
+        #
+        #     # Adicionar item ao menu
+        #     self.menu.add_item(
+        #         MenuOption(id=program.id, name=program.name, metadata=metadata, callback=self.vote_option_menu_handler)
+        #     )
+        #
+        # self.menu.show()

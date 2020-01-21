@@ -40,7 +40,6 @@ class DB:
         if isinstance(fields, list):
             fields = ', '.join(fields)
 
-
         cursor = self.db.cursor()
         cursor.execute("SELECT %s FROM `%s` " % (fields, table))
 
