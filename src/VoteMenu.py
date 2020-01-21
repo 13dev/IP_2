@@ -12,13 +12,13 @@ class VoteMenu:
         self.db = db
 
     def vote_option_menu_handler(self, program):
-        program_metadata = program.getmetadata()
+        metadata = program.getmetadata()
 
-        program_metadata['votes'] = int(program_metadata['votes']) + 1
+        metadata['votes'] = int(metadata['votes']) + 1
 
-        self.db.update('programs', data={"votes": program_metadata['votes']}, where="id = %s" % program.id)
+        self.db.update('programs', data={"votes": metadata['votes']}, where="id = %s" % program.id)
 
-        program.setmetadata(program_metadata)
+        program.setmetadata(metadata)
         cls()
         self.menu.show()
 
