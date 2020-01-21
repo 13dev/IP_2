@@ -49,6 +49,7 @@ class DB:
     """
     Obter todos os registos da base de dados
     @param table - tabela a ser selecionada
+    @param where - condição a ser passada para a WHERE do sql.
     @param fields - fields a ser selecionados, irá selecionar todos como padrão
     """
     def fetch(self, table, where, fields="*"):
@@ -66,18 +67,34 @@ class DB:
 
         return cursor.fetchall()
 
+    """
+    Fazer update de registo(s) na base de dados
+    
+    @param table - tabela a ser selecionada
+    @param data:dict - cada key corresponde a uma coluna e value a um valor a ser atualizado ex:
+        {"coluna1": "valor1", "nome": "NovoNome", "votos": 2}
+        
+    @param where - adicionar condição de atualização
+    """
     def update(self, table, data, where=None):
 
         sql = "UPDATE %s SET " % table
 
         values = ()
         cols = []
+
         for col, value in data.items():
             values += (value,)
             cols.append("%s = ?" % col)
 
         sql += ', '.join(cols)
 
+        """
+        Variavel sql terá o seguinte formato:
+        UPDATE programas SET nome = ?, votos = ? WHERE id = ?
+        """
+
+        # verificar se condição existe caso contrario irá atualizar todos.
         if where is not None:
             sql += " WHERE %s" % where
 
