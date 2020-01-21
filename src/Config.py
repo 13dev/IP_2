@@ -1,3 +1,4 @@
+# coding=utf-8
 from src.Helpers import obj
 
 # Configurações globais
