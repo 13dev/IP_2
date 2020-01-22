@@ -1,8 +1,6 @@
-import os
-import sys
-
 from src.AdminMenu import AdminMenu
 from src.Config import CONFIG
+from src.Menu.MenuOption import MenuOption
 
 
 class AdminMode:
@@ -12,7 +10,13 @@ class AdminMode:
     def __init__(self, db):
         self.db = db
         self.db.open(CONFIG.DB.FILENAME)
-        self.menu = AdminMenu(self.db)
+
+        programs = []
+        for index, p in enumerate(self.db.fetch_all('programs')):
+            programs.append(MenuOption(id=index+1, name=p.name, metadata={"id": p.id}))
+
+        self.menu = AdminMenu(self.db, programs)
+
 
     def __del__(self):
         self.db.close()

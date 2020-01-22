@@ -11,7 +11,8 @@ CONFIG = {
     'NAME': 'RTP-MADEIRA \N{COPYRIGHT SIGN}',
     'PROGRESSBARCHAR': '■',
     'MENUCHAR': '▬',
-    'LIMIT_PROGRAMS': 20
+    'LIMIT_PROGRAMS': 20,
+    'SUBTITLE': "Os Melhores programas televisivos",
 }
 
 # Passar dicionario como keyworded argumento

@@ -36,3 +36,4 @@ class MenuOption:
     def setmetadata(self, metadata):
         self.metadata = metadata
 
+

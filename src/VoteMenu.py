@@ -59,7 +59,7 @@ class VoteMenu:
     Construir tabela de votos conforme os programas;
     Esta função chamada quando a votação terminar;
     """
-    def __build_list_table(self, data):
+    def __build_list_table(self, items):
 
         print("▬" * 80)
 
@@ -68,26 +68,28 @@ class VoteMenu:
         print("▬" * 80)
 
         # soma total de todos os votos
-        total = sum([p.votes for p in data])
+        total = sum([p.getmetadata('votes') for p in items])
 
         """
         Iterar todos os programas e apresentar linha a linha.
         Será calculado a percentagem de cada program aqui e apresentar o mesmo.
         """
-        for program in data:
+        for program in items:
+
+            metadata = program.getmetadata()
 
             # saltar para o proximo programa quando o nº de votos for 0.
-            if program.votes == 0:
+            if metadata['votes'] == 0:
                 continue
 
             # Calcular percentagem de votos de cada programa
-            percent = self.__calc_program_votes(program.votes, total)
+            percent = self.__calc_program_votes(metadata['votes'], total)
 
             # Definir formatação para cada linha na tabela de votos.
-            line_str = "%s) %s" % (program.id, program.name)
+            line_str = "%s) %s" % (program.getid(), program.getname())
 
             # Apresentar a linha com tabulação e limite de 34, 17, 3 caracteres.
-            print('{:<36}{:<17}{:<3}'.format(line_str, program.votes, "%s %.1f%%" % (self.__build_progressbar(percent), percent)))
+            print('{:<36}{:<17}{:<3}'.format(line_str, metadata['votes'], "%s %.1f%%" % (self.__build_progressbar(percent), percent)))
 
         print("▬" * 80)
         input()
@@ -99,15 +101,12 @@ class VoteMenu:
     
     Ou seja, quando o choice (0) for escolhido no menu esta função vai ser chamada automaticamente
     """
-    def menu_close_handler(self):
+    def menu_close_handler(self, items):
         # limpar ecrã
         cls()
 
-        # garantir que vem so 20 programas.
-        programs = self.db.fetch_all('programs')
-
         # apresentar a tabela
-        self.__build_list_table(programs)
+        self.__build_list_table(items)
 
         # fechar programa
         sys.exit()
@@ -131,7 +130,7 @@ class VoteMenu:
     neste caso sem o paramentro --admin.
     """
     def show(self, data):
-        self.menu = Menu(CONFIG.NAME, subtitle="Os Melhores programas televisivos")
+        self.menu = Menu(CONFIG.NAME, subtitle=CONFIG.SUBTITLE)
 
         # Construir todas as opções do programa
         for index, program in enumerate(data):
@@ -139,19 +138,20 @@ class VoteMenu:
             # definir uma estrutura de dados para o metadata(informação adicional) de cada opção do menu.
             metadata = {
                 "schedule": program.schedule,
-                "votes": program.votes
+                "votes": program.votes,
+                "id": program.id
             }
-
-            # Definir função a ser chamada quando choice for escolhido no menu.
-            self.menu.setmenu_close(callback=self.menu_close_handler, choice=0)
-
-            # Definir função a ser chamada quando ocorrer a formatação de cada opção do menu.
-            self.menu.setformat_menu_option(self.format_menu_option)
 
             # Adicionar item ao menu
             self.menu.add_item(
                 MenuOption(id=index+1, name=program.name, metadata=metadata, callback=self.vote_option_menu_handler)
             )
+
+        # Definir função a ser chamada quando choice for escolhido no menu.
+        self.menu.setmenu_close(callback=self.menu_close_handler(self.menu.items), choice=0)
+
+        # Definir função a ser chamada quando ocorrer a formatação de cada opção do menu.
+        self.menu.setformat_menu_option(self.format_menu_option)
 
         # Last but not least, apresentar menu.
         self.menu.show()

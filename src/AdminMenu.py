@@ -12,12 +12,18 @@ from src.Menu.MenuOption import MenuOption
 """
 Esta classe foi criada para organizar tudo o que pretence ao administrador.
 """
+
+
 class AdminMenu:
     menu = None
+    programs = []
+    programsids = []
 
     # Construtor, função a ser chamada quando for instanciado um objeto deste tipo.
-    def __init__(self, db):
+    def __init__(self, db, programs):
         self.db = db
+        self.programs = programs
+        self.programsids = [p.getid() for p in self.programs]
 
     """"
     Esta função ira ser chamada quando qualquer opção for escolhida, 
@@ -29,8 +35,7 @@ class AdminMenu:
         sys.exit()
 
     def handle_add_program(self, option):
-        programsids = self.db.fetch_all('programs', fields=['id'])
-        if len(programsids) >= CONFIG.LIMIT_PROGRAMS:
+        if len(self.programsids) >= CONFIG.LIMIT_PROGRAMS:
             print("Número de programas máximo atingido.")
             time.sleep(2)
             cls()
@@ -50,6 +55,7 @@ class AdminMenu:
             "schedule": schedule,
             "votes": 0
         })
+
         cls()
         print("Programa inserido com sucesso!")
         time.sleep(3)
@@ -64,25 +70,23 @@ class AdminMenu:
 
         print(30 * CONFIG.MENUCHAR, CONFIG.NAME, 30 * CONFIG.MENUCHAR)
 
-        programs = self.db.fetch_all('programs')
-
-        programsids = {i+1: str(v.id) for i, v in enumerate(programs)}
-
-        for index, program in enumerate(programs):
-            print("%s) %s" % (index+1, program.name))
+        for index, program in enumerate(self.programs):
+            print("%s) %s" % (program.getid(), program.getname()))
 
         print(76 * CONFIG.MENUCHAR)
 
         loop = True
         while loop:
-            choice = int(input("Programa a remover [1-%s]: " % len(programs)))
+            choice = int(input("Programa a remover [1-%s]: " % len(self.programs)))
 
             # Verifica se opção é valida.
-            if not(choice in programsids.keys()):
+            if not(choice in self.programsids):
                 print("Opção invalida tente novamente.")
                 continue
 
-            self.db.delete('programs', where="id = %s" % programsids[choice])
+            program_to_delete = self.findprogrambyid(choice).getmetadata('id')
+
+            self.db.delete('programs', where="id = %s" % program_to_delete)
             loop = False
 
         print()
@@ -111,3 +115,10 @@ class AdminMenu:
             MenuOption(id="3", name="Sair.", callback=self.handle_menu_exit))
 
         self.menu.show()
+
+    def findprogrambyid(self, id):
+        for p in self.programs:
+            if id == int(p.getid()):
+                return p
+
+        raise Exception("Programa não encontrado!")
