@@ -1,16 +1,15 @@
 import json
 import os
 import sys
-
-
 from src.Helpers import cls
-from src.Menu.Menu import Menu
-from src.Menu.MenuOption import MenuOption
 
-
+"""
+Esta classe foi criada para organizar tudo o que pretence ao administrador.
+"""
 class AdminMenu:
     menu = None
 
+    # Construtor, função a ser chamada quando for instanciado um objeto deste tipo.
     def __init__(self, db):
         self.db = db
 
@@ -26,7 +25,7 @@ class AdminMenu:
         self.menu.show()
 
     def menu_close_handler(self):
-        print("Fechar votação")
+        pass
 
     def format_menu_option(self, item):
 
@@ -40,7 +39,7 @@ class AdminMenu:
     def show(self, data):
         os.execl(sys.executable, sys.executable, *sys.argv)
 
-        # self.menu = Menu("RTP \N{COPYRIGHT SIGN} - Madeira", subtitle="Modo Administrador.")
+        # self.menu = Menu(CONFIG.NAME, subtitle="Modo Administrador.")
 
         # self.menu.setmenu_close(callback=self.menu_close_handler, choice=0)
         # self.menu.setformat_menu_option(self.format_menu_option)

@@ -35,7 +35,7 @@ class DefaultMode:
 
     def show(self):
         #Mostrar o logo do programa
-        self.show_logo()
+        #self.show_logo()
 
         self.db.update('programs', {"votes": 1, "name": "Festival RTP Canção"}, where="id = 2")
         programs = self.db.fetch('programs', where="id > 0 and id <=20")
