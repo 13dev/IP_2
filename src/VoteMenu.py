@@ -27,9 +27,9 @@ class VoteMenu:
 
         # Incrementa votos do programa
         metadata['votes'] = int(metadata['votes']) + 1
-        print(program.name)
+
         # Atualizar programa na base de dados
-        self.db.update('programs', data={"votes": metadata['votes']}, where="name = '%s'" % program.name)
+        self.db.update('programs', data={"votes": metadata['votes']}, where="id = %s" % metadata['id'])
 
         # clear no screen.
         cls()
@@ -101,12 +101,12 @@ class VoteMenu:
     
     Ou seja, quando o choice (0) for escolhido no menu esta função vai ser chamada automaticamente
     """
-    def menu_close_handler(self, items):
+    def menu_close_handler(self):
         # limpar ecrã
         cls()
 
         # apresentar a tabela
-        self.__build_list_table(items)
+        self.__build_list_table(self.menu.items)
 
         # fechar programa
         sys.exit()
@@ -148,7 +148,7 @@ class VoteMenu:
             )
 
         # Definir função a ser chamada quando choice for escolhido no menu.
-        self.menu.setmenu_close(callback=self.menu_close_handler(self.menu.items), choice=0)
+        self.menu.setmenu_close(callback=self.menu_close_handler, choice=0)
 
         # Definir função a ser chamada quando ocorrer a formatação de cada opção do menu.
         self.menu.setformat_menu_option(self.format_menu_option)
