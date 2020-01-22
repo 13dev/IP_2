@@ -8,7 +8,10 @@ CONFIG = {
         'USER': '',
         'PASSWORD': '',
     },
-    'NAME': 'RTP-MADEIRA \N{COPYRIGHT SIGN}'
+    'NAME': 'RTP-MADEIRA \N{COPYRIGHT SIGN}',
+    'PROGRESSBARCHAR': '■',
+    'MENUCHAR': '▬',
+    'LIMIT_PROGRAMS': 20
 }
 
 # Passar dicionario como keyworded argumento

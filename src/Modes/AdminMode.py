@@ -20,4 +20,8 @@ class AdminMode:
 
 
     def show(self):
-        os.startfile(sys.argv[0])
+
+        # Mostrar o votemenu com os programas na existentes na base de dados
+        # que cumprem a sql montada acima.
+        self.menu.show()
+

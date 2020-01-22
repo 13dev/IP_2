@@ -101,6 +101,50 @@ class DB:
         cur.execute(sql, values)
         self.db.commit()
 
+    """
+    Eliminar registo(s) da base de dados.
+    @param table - tabela a ser selecionada
+    @param where - adicionar condição de eliminação
+    """
+    def delete(self, table, where=None):
+
+        sql = "DELETE FROM %s" % table
+
+        # verificar se condição existe caso contrario irá eliminar todos.
+        if where is not None:
+            sql += " WHERE %s" % where
+
+        cur = self.db.cursor()
+        cur.execute(sql)
+        self.db.commit()
+
+    """
+    Fazer inserção de registo(s) na base de dados
+    
+    @param table - tabela a ser selecionada
+    @param data:dict - cada key corresponde a uma coluna e value a um valor a ser intruduzido ex:
+        {"coluna1": "valor1", "nome": "Nome", "votos": 2}
+    @return - o id da linha inserida
+    """
+    def insert(self, table, data):
+
+        values = ()
+        cols = []
+        for col, value in data.items():
+            values += ("'%s'" % value,)
+            cols.append(col)
+
+        # transformar lista para string separada por virgulas
+        values = ', '.join(values)
+        cols = ', '.join(cols)
+
+        # montar a query para acessar a base de dados
+        sql = "INSERT INTO %s (%s) VALUES(%s)" % (table, cols, values)
+
+        cur = self.db.cursor()
+        cur.execute(sql)
+        self.db.commit()
+        return cur.lastrowid
 
     """
     Fecha a conexão a base de dados e elimina o objecto db para libertar memoria

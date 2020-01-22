@@ -27,14 +27,15 @@ class VoteMenu:
 
         # Incrementa votos do programa
         metadata['votes'] = int(metadata['votes']) + 1
-
+        print(program.name)
         # Atualizar programa na base de dados
-        self.db.update('programs', data={"votes": metadata['votes']}, where="id = %s" % program.id)
+        self.db.update('programs', data={"votes": metadata['votes']}, where="name = '%s'" % program.name)
 
         # clear no screen.
         cls()
         # las but not least, apresentar o menu.
         self.menu.show()
+        input()
 
     """
     Função que calcula a percentagem de votos de cada programa, 
@@ -42,6 +43,17 @@ class VoteMenu:
     """
     def __calc_program_votes(self, pvotes, totalvotes):
         return round((pvotes / totalvotes) * 100, 1)
+
+    """
+    Criar a barrinha de percentagem para cada linha de votos.
+    """
+    def __build_progressbar(self, percent):
+        max_blocks = 19
+        # Calcular quandos quadradinhos imprimir para cada percentagem de votos
+        how_many_chars = int(round(((max_blocks * percent) / 100), 1) + 1)
+
+        return CONFIG.PROGRESSBARCHAR * how_many_chars
+
 
     """
     Construir tabela de votos conforme os programas;
@@ -52,7 +64,7 @@ class VoteMenu:
         print("▬" * 80)
 
         # Apresentar cabeçalho da tabela de votos.
-        print('{:<34}{:<17}{:<3}'.format("Nome", "Nº Votos", "Nº Votos(%)"))
+        print('{:<36}{:<17}{:<3}'.format("Nome", "Nº Votos", "Nº Votos(%)"))
         print("▬" * 80)
 
         # soma total de todos os votos
@@ -63,19 +75,22 @@ class VoteMenu:
         Será calculado a percentagem de cada program aqui e apresentar o mesmo.
         """
         for program in data:
+
+            # saltar para o proximo programa quando o nº de votos for 0.
+            if program.votes == 0:
+                continue
+
             # Calcular percentagem de votos de cada programa
             percent = self.__calc_program_votes(program.votes, total)
-
-            # Formatar a percentagem se for 0.0, ficará 0
-            percent = '{:g}%'.format(percent)
 
             # Definir formatação para cada linha na tabela de votos.
             line_str = "%s) %s" % (program.id, program.name)
 
             # Apresentar a linha com tabulação e limite de 34, 17, 3 caracteres.
-            print('{:<34}{:<17}{:<3}'.format(line_str, program.votes, percent))
+            print('{:<36}{:<17}{:<3}'.format(line_str, program.votes, "%s %.1f%%" % (self.__build_progressbar(percent), percent)))
 
         print("▬" * 80)
+        input()
 
 
     """
@@ -89,7 +104,7 @@ class VoteMenu:
         cls()
 
         # garantir que vem so 20 programas.
-        programs = self.db.fetch('programs', where="id > 0 and id <=20 ORDER BY id ASC")
+        programs = self.db.fetch_all('programs')
 
         # apresentar a tabela
         self.__build_list_table(programs)
@@ -119,7 +134,7 @@ class VoteMenu:
         self.menu = Menu(CONFIG.NAME, subtitle="Os Melhores programas televisivos")
 
         # Construir todas as opções do programa
-        for program in data:
+        for index, program in enumerate(data):
 
             # definir uma estrutura de dados para o metadata(informação adicional) de cada opção do menu.
             metadata = {
@@ -135,7 +150,7 @@ class VoteMenu:
 
             # Adicionar item ao menu
             self.menu.add_item(
-                MenuOption(id=program.id, name=program.name, metadata=metadata, callback=self.vote_option_menu_handler)
+                MenuOption(id=index+1, name=program.name, metadata=metadata, callback=self.vote_option_menu_handler)
             )
 
         # Last but not least, apresentar menu.

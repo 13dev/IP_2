@@ -38,7 +38,7 @@ class DefaultMode:
         #self.show_logo()
 
         self.db.update('programs', {"votes": 1, "name": "Festival RTP Canção"}, where="id = 2")
-        programs = self.db.fetch('programs', where="id > 0 and id <=20")
+        programs = self.db.fetch_all('programs')
 
         # Mostrar o votemenu com os programas na existentes na base de dados
         # que cumprem a sql montada acima.

@@ -1,10 +1,11 @@
 # coding=utf-8
+from src.Config import CONFIG
 from src.Menu.JsonHandler import JsonHandler
 from src.Menu.MenuOption import MenuOption
 
 
 class Menu:
-    CHAR = "▬"
+    CHAR = CONFIG.MENUCHAR
 
     def __init__(self, name, **kwargs):
         self.items = []
@@ -102,10 +103,11 @@ class Menu:
                 if self.format_menu_option is not None:
                     print(self.format_menu_option(item))
                 else:
+                    # index+1 para pular o zero
                     print("{}: {}".format(item.getid(), item.getname()))
 
         # Mostrar divisão do menu
-        print(78 * self.CHAR)
+        print(75 * self.CHAR)
 
         while self.loop:
             choice = str(input("Escolha [1-%s]: " % len(self.items)))
