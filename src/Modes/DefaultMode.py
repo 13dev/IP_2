@@ -30,12 +30,12 @@ class DefaultMode:
             sleep(.01)
             sys.stdout.write(char)
             sys.stdout.flush()
-        sleep(2)
+        sleep(1)
         cls()
 
     def show(self):
         #Mostrar o logo do programa
-        #self.show_logo()
+        self.show_logo()
 
         programs = self.db.fetch_all('programs')
 

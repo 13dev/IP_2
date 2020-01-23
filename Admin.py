@@ -7,4 +7,5 @@ db.open(CONFIG.DB.FILENAME)
 
 adminmode = AdminMode(db)
 adminmode.show()
+
 del adminmode

@@ -1,11 +1,10 @@
 import json
 import sys
 import time
-
 from src.Config import CONFIG
 import subprocess
 
-from src.Helpers import cls
+from src.Helpers import cls, populateprograms
 from src.Menu.Menu import Menu
 from src.Menu.MenuOption import MenuOption
 
@@ -20,10 +19,11 @@ class AdminMenu:
     programsids = []
 
     # Construtor, função a ser chamada quando for instanciado um objeto deste tipo.
-    def __init__(self, db, programs):
+    def __init__(self, db):
         self.db = db
-        self.programs = programs
-        self.programsids = [p.getid() for p in self.programs]
+        populateprograms(self.db, self.programs)
+
+        self.programsids = [int(p.getid()) for p in self.programs]
 
     """"
     Esta função ira ser chamada quando qualquer opção for escolhida, 
@@ -55,6 +55,9 @@ class AdminMenu:
             "schedule": schedule,
             "votes": 0
         })
+
+        # atualizar programas
+        populateprograms(self.db, self.programs)
 
         cls()
         print("Programa inserido com sucesso!")
@@ -88,6 +91,9 @@ class AdminMenu:
 
             self.db.delete('programs', where="id = %s" % program_to_delete)
             loop = False
+
+        # atualizar programas
+        populateprograms(self.db, self.programs)
 
         print()
         print("Removido com sucesso!")
