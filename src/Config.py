@@ -5,8 +5,8 @@ from src.Helpers import obj
 CONFIG = {
     'DB' : {
         'FILENAME': 'database.sqlite3',
-        'USER': '',
-        'PASSWORD': '',
+        #'USER': '',
+        #'PASSWORD': '',
     },
     'NAME': 'RTP-MADEIRA \N{COPYRIGHT SIGN}',
     'PROGRESSBARCHAR': '■',

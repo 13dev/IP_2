@@ -4,7 +4,7 @@ import time
 from src.Config import CONFIG
 import subprocess
 
-from src.Helpers import cls, populateprograms
+from src.Helpers import cls
 from src.Menu.Menu import Menu
 from src.Menu.MenuOption import MenuOption
 
@@ -21,9 +21,7 @@ class AdminMenu:
     # Construtor, função a ser chamada quando for instanciado um objeto deste tipo.
     def __init__(self, db):
         self.db = db
-        populateprograms(self.db, self.programs)
-
-        self.programsids = [int(p.getid()) for p in self.programs]
+        self.populateprograms()
 
     """"
     Esta função ira ser chamada quando qualquer opção for escolhida, 
@@ -34,7 +32,11 @@ class AdminMenu:
         subprocess.Popen('python Main.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
         sys.exit()
 
+    """
+    Função a ser chamada quando for para adicionar um programa.
+    """
     def handle_add_program(self, option):
+        print(len(self.programsids), CONFIG.LIMIT_PROGRAMS)
         if len(self.programsids) >= CONFIG.LIMIT_PROGRAMS:
             print("Número de programas máximo atingido.")
             time.sleep(2)
@@ -57,7 +59,7 @@ class AdminMenu:
         })
 
         # atualizar programas
-        populateprograms(self.db, self.programs)
+        self.populateprograms()
 
         cls()
         print("Programa inserido com sucesso!")
@@ -93,7 +95,7 @@ class AdminMenu:
             loop = False
 
         # atualizar programas
-        populateprograms(self.db, self.programs)
+        self.populateprograms()
 
         print()
         print("Removido com sucesso!")
@@ -112,16 +114,47 @@ class AdminMenu:
     def show(self):
         self.menu = Menu(CONFIG.NAME, subtitle="Modo Administrador.")
 
-        # Adicionar item ao menu
+        # Adicionar items ao menu
         self.menu.add_item(
-            MenuOption(id="1", name="Adicionar programas televisivos.", callback=self.handle_add_program))
+            MenuOption(
+                id="1",
+                name="Adicionar programas televisivos.",
+                callback=self.handle_add_program
+            )
+        )
         self.menu.add_item(
-            MenuOption(id="2", name="Remover programas televisivos.", callback=self.handle_remove_program))
+            MenuOption(
+                id="2",
+                name="Remover programas televisivos.",
+                callback=self.handle_remove_program
+            )
+        )
         self.menu.add_item(
-            MenuOption(id="3", name="Sair.", callback=self.handle_menu_exit))
+            MenuOption(
+                id="3",
+                name="Sair.",
+                callback=self.handle_menu_exit
+            )
+        )
 
         self.menu.show()
 
+    """
+    Atualizar/Obter programas
+    """
+    def populateprograms(self):
+        self.programs = []
+        for index, p in enumerate(self.db.fetch_all('programs')):
+            self.programs.append(MenuOption(id=index + 1, name=p.name, metadata={"id": p.id}))
+
+        # Atualizar os programs ids tambem
+        self.programsids = [int(p.getid()) for p in self.programs]
+
+        return self.programs
+
+    """
+    Encontrar programa pelo id (id do menu option)
+    """
     def findprogrambyid(self, id):
         for p in self.programs:
             if id == int(p.getid()):

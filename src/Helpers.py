@@ -48,10 +48,3 @@ Linux
 """
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
-
-def populateprograms(db, programs):
-
-    for index, p in enumerate(db.fetch_all('programs')):
-        programs.append(MenuOption(id=index + 1, name=p.name, metadata={"id": p.id}))
-
-    return programs
