@@ -36,7 +36,7 @@ class AdminMenu:
     Função a ser chamada quando for para adicionar um programa.
     """
     def handle_add_program(self, option):
-        print(len(self.programsids), CONFIG.LIMIT_PROGRAMS)
+        #print(len(self.programsids), CONFIG.LIMIT_PROGRAMS)
         if len(self.programsids) >= CONFIG.LIMIT_PROGRAMS:
             print("Número de programas máximo atingido.")
             time.sleep(2)
@@ -44,30 +44,34 @@ class AdminMenu:
             # Mostrar menu principal
             self.show()
 
-        nome = str(input("Nome do Programa: "))
-        schedule_start = int(input("Hora de Início (24h):"))
-        schedule_end = int(input("Hora de Fim (24h):"))
+        try:
+            nome = str(input("Nome do Programa: "))
+            schedule_start = str(input("Hora de Início (24h):"))
+            schedule_end = str(input("Hora de Fim (24h):"))
 
-        # Montar estrutura do horario para inserir como string na coluna 'schedule'
-        schedule = json.dumps({'start': schedule_start, 'end': schedule_end})
+            # Montar estrutura do horario para inserir como string na coluna 'schedule'
+            schedule = json.dumps({'start': schedule_start, 'end': schedule_end})
 
-        # Inserir na base de dados
-        self.db.insert('programs', data={
-            "name": nome,
-            "schedule": schedule,
-            "votes": 0
-        })
+            # Inserir na base de dados
+            self.db.insert('programs', data={
+                "name": nome,
+                "schedule": schedule,
+                "votes": 0
+            })
 
-        # atualizar programas
-        self.populateprograms()
+            # atualizar programas
+            self.populateprograms()
 
-        cls()
-        print("Programa inserido com sucesso!")
-        time.sleep(3)
-        cls()
+            cls()
+            print("Programa inserido com sucesso!")
+            time.sleep(3)
+            cls()
 
-        # Mostrar menu principal
-        self.show()
+            # Mostrar menu principal
+            self.show()
+
+        except ValueError:
+            print("Valor inválido, tente novamente!")
 
     def handle_remove_program(self, option):
 
