@@ -1,5 +1,3 @@
-from src.Config import CONFIG
-from src.Database import DB
 from src.Helpers import cls
 from src.VoteMenu import VoteMenu
 import sys

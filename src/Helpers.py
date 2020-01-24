@@ -1,7 +1,6 @@
 # coding=utf-8
 from collections import namedtuple
 import os
-from src.Menu.MenuOption import MenuOption
 
 """
 Esta classe converte dicionario para objecto
